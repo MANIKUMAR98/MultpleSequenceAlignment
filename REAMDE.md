@@ -89,7 +89,7 @@ Use the corresponding Python script for each algorithm. For example:
 ### Run MAFFT:
 To run MAFFT for aligning your sequences, execute the following command:
   ```bash
-  pip install biopython 
+  python mafft.py
   ```
 
 
