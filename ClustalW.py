@@ -1,26 +1,25 @@
 import os
 import subprocess
 from Bio.Align.Applications import ClustalwCommandline
+import time
 
-# Define paths
+
 clustalw_path = "/Users/manikumar/miniconda3/bin/clustalw2"
 input_dir = "/Users/manikumar/Downloads/bb3_release/TEST/"
-output_dir = input_dir  # Output MSF files will be saved in the same directory
+output_dir = input_dir
 
-# Get a list of all TFA files in the directory
+
 tfa_files = [f for f in os.listdir(input_dir) if f.endswith(".tfa")]
+total_start_time = time.time()
 
-# Process each TFA file
 for tfa_file in tfa_files:
     tfa_path = os.path.join(input_dir, tfa_file)
     clustal_output_file = os.path.join(output_dir, f"{os.path.splitext(tfa_file)[0]}.aln")
     msf_output_file = os.path.join(output_dir, f"sequence_{os.path.splitext(tfa_file)[0]}.msf")  # MSF output file
 
-    # Run ClustalW to generate alignment in Clustal format
     clustalw_cline = ClustalwCommandline(clustalw_path, infile=tfa_path)
     stdout, stderr = clustalw_cline()
 
-    # Convert Clustal alignment to MSF using EMBOSS seqret
     seqret_command = [
         "seqret",
         "-sequence", clustal_output_file,
@@ -30,4 +29,7 @@ for tfa_file in tfa_files:
     ]
     subprocess.run(seqret_command, check=True)
 
-    print(f"MSF alignment saved to: {msf_output_file}")
+    total_end_time = time.time()
+    total_time_taken = total_end_time - total_start_time
+    print(f"Total time taken for processing all files: {total_time_taken:.2f} seconds")
+
